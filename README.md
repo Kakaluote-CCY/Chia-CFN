@@ -26,53 +26,53 @@ Please follow the steps to have a try:
 
 #list all the disks
 
-lsblk
+  lsblk
 
 #create file-system in that disk
 
-sudo mkfs -t xfs /dev/xvdf
+  sudo mkfs -t xfs /dev/xvdf
 
-sudo mkfs -t xfs /dev/nvme0n1
+  sudo mkfs -t xfs /dev/nvme0n1
 
 #mount two disks to your instance
 
-sudo mount /dev/nvme0n1 /tmp1
+  sudo mount /dev/nvme0n1 /tmp1
 
-sudo mount /dev/xvdf /data1
+  sudo mount /dev/xvdf /data1
 
 #change mode for your directory
 
-sudo chown -R ec2-user.ec2-user /tmp1
+  sudo chown -R ec2-user.ec2-user /tmp1
 
-sudo chown -R ec2-user.ec2-user /data1
+  sudo chown -R ec2-user.ec2-user /data1
 
 #download chia-blockchain package and run the .sh
 
-sudo yum update -y
+  sudo yum update -y
 
-sudo yum install python3 git -y
+  sudo yum install python3 git -y
 
-git clone https://github.com/Chia-Network/chia-blockchain.git -b latest
+  git clone https://github.com/Chia-Network/chia-blockchain.git -b latest
 
-cd chia-blockchain
+  cd chia-blockchain
 
-sh install.sh
+  sh install.sh
 
 #go to the virtual environment of python
 
-. ./activate
+  . ./activate
 
 #init
 
-chia init
+  chia init
 
-chia keys add -f <file> / chia keys generate
+  chia keys add -f <file> / chia keys generate
   
-chia start farmer
+  chia start farmer
   
 #start ploting your disk!
 
-nohup chia plots create -k 32 -b 8000 -r 2 -n 4 -t /tmp1 -d /data1
+  nohup chia plots create -k 32 -b 8000 -r 2 -n 4 -t /tmp1 -d /data1
   
 For more details: https://github.com/Chia-Network/chia-blockchain/wiki/CLI-Commands-Reference
 

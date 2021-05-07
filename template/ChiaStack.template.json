@@ -1,5 +1,5 @@
 {
-  "Description": "(SO8005) - CCY",
+  "Description": "CCY",
   "Metadata": {
     "AWS::CloudFormation::Interface": {
       "ParameterGroups": [

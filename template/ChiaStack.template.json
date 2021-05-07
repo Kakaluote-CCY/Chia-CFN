@@ -1,0 +1,667 @@
+{
+  "Description": "(SO8005) - CCY",
+  "Metadata": {
+    "AWS::CloudFormation::Interface": {
+      "ParameterGroups": [
+        {
+          "Label": {
+            "default": "Instance Types"
+          },
+          "Parameters": [
+            "FarmerInstanceType"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Worker number Information"
+          },
+          "Parameters": [
+            "FarmerNumber"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Key Pair"
+          },
+          "Parameters": [
+            "KeyName"
+          ]
+        }
+      ]
+    }
+  },
+  "Parameters": {
+    "FarmerNumber": {
+      "Type": "Number",
+      "Default": 1,
+      "Description": "Farmer Instance Number",
+      "MinValue": 0
+    },
+    "FarmerInstanceType": {
+      "Type": "String",
+      "Default": "i3.large",
+      "AllowedValues": [
+        "i3.large"
+      ],
+      "Description": "Farmer instance type"
+    },
+    "KeyName": {
+      "Type": "String",
+      "Default": "Chia",
+      "Description": "Key Name (Please create the key pair first)"
+    }
+  },
+  "Resources": {
+    "ec2DownloadRole7733DE59": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "ec2.",
+                      {
+                        "Ref": "AWS::URLSuffix"
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/ec2DownloadRole/Resource"
+      }
+    },
+    "StudioVPC55B0D16E": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.138.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "ChiaStack/StudioVPC"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/StudioVPC/Resource"
+      }
+    },
+    "StudioVPCPUBLICSubnet1Subnet67340179": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.138.0.0/16",
+        "VpcId": {
+          "Ref": "StudioVPC55B0D16E"
+        },
+        "AvailabilityZone": "us-west-2a",
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "PUBLIC"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "Name",
+            "Value": "ChiaStack/StudioVPC/PUBLICSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/StudioVPC/PUBLICSubnet1/Subnet"
+      }
+    },
+    "StudioVPCPUBLICSubnet1RouteTable80B50571": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "StudioVPC55B0D16E"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "ChiaStack/StudioVPC/PUBLICSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/StudioVPC/PUBLICSubnet1/RouteTable"
+      }
+    },
+    "StudioVPCPUBLICSubnet1RouteTableAssociationEAAF216D": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "StudioVPCPUBLICSubnet1RouteTable80B50571"
+        },
+        "SubnetId": {
+          "Ref": "StudioVPCPUBLICSubnet1Subnet67340179"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/StudioVPC/PUBLICSubnet1/RouteTableAssociation"
+      }
+    },
+    "StudioVPCPUBLICSubnet1DefaultRoute38673EFB": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "StudioVPCPUBLICSubnet1RouteTable80B50571"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "StudioVPCIGW1E7C99C8"
+        }
+      },
+      "DependsOn": [
+        "StudioVPCVPCGW1C53AC33"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/StudioVPC/PUBLICSubnet1/DefaultRoute"
+      }
+    },
+    "StudioVPCIGW1E7C99C8": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "ChiaStack/StudioVPC"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/StudioVPC/IGW"
+      }
+    },
+    "StudioVPCVPCGW1C53AC33": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "StudioVPC55B0D16E"
+        },
+        "InternetGatewayId": {
+          "Ref": "StudioVPCIGW1E7C99C8"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/StudioVPC/VPCGW"
+      }
+    },
+    "RepoSecurityGroup77E693B5": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "SG for Dealine Repository Server",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "allow ssh access",
+            "FromPort": 22,
+            "IpProtocol": "tcp",
+            "ToPort": 22
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "test",
+            "FromPort": 8447,
+            "IpProtocol": "tcp",
+            "ToPort": 8447
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "test",
+            "FromPort": 8448,
+            "IpProtocol": "tcp",
+            "ToPort": 8448
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "test",
+            "FromPort": 8444,
+            "IpProtocol": "tcp",
+            "ToPort": 8444
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "test",
+            "FromPort": 3903,
+            "IpProtocol": "tcp",
+            "ToPort": 3903
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "test",
+            "FromPort": 9090,
+            "IpProtocol": "tcp",
+            "ToPort": 9090
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "test",
+            "FromPort": 3000,
+            "IpProtocol": "tcp",
+            "ToPort": 3000
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "test",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "test",
+            "FromPort": 9092,
+            "IpProtocol": "tcp",
+            "ToPort": 9092
+          }
+        ],
+        "VpcId": {
+          "Ref": "StudioVPC55B0D16E"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/RepoSecurityGroup/Resource"
+      }
+    },
+    "chiafarmerInstanceProfileB85CD170": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "ec2DownloadRole7733DE59"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/chia farmer/InstanceProfile"
+      }
+    },
+    "chiafarmer61888B10": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "AvailabilityZone": "us-west-2a",
+        "IamInstanceProfile": {
+          "Ref": "chiafarmerInstanceProfileB85CD170"
+        },
+        "ImageId": {
+          "Fn::FindInMap": [
+            "LinuxMap",
+            {
+              "Ref": "AWS::Region"
+            },
+            "ami"
+          ]
+        },
+        "InstanceType": {
+          "Ref": "FarmerInstanceType"
+        },
+        "KeyName": {
+          "Ref": "KeyName"
+        },
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "RepoSecurityGroup77E693B5",
+              "GroupId"
+            ]
+          }
+        ],
+        "SubnetId": {
+          "Ref": "StudioVPCPUBLICSubnet1Subnet67340179"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "ChiaStack/chia farmer"
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": "#!/bin/bash\nsudo mkdir /tmp1\nsudo mkdir /data1\nsudo yum update -y\nsudo yum install python3 git -y\ngit clone https://github.com/Chia-Network/chia-blockchain.git -b latest\ncd chia-blockchain\nsh install.sh"
+        }
+      },
+      "DependsOn": [
+        "ec2DownloadRole7733DE59"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/chia farmer/Resource"
+      }
+    },
+    "ebsrole13C72995": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":root"
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/ebs_role/Resource"
+      }
+    },
+    "ebsroleDefaultPolicy4BB1D374": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "ec2:AttachVolume",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":ec2:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":volume/",
+                      {
+                        "Ref": "hhd257C7A8C"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":ec2:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":instance/",
+                      {
+                        "Ref": "chiafarmer61888B10"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "ebsroleDefaultPolicy4BB1D374",
+        "Roles": [
+          {
+            "Ref": "ebsrole13C72995"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/ebs_role/DefaultPolicy/Resource"
+      }
+    },
+    "hhd257C7A8C": {
+      "Type": "AWS::EC2::Volume",
+      "Properties": {
+        "AvailabilityZone": "us-west-2a",
+        "Encrypted": false,
+        "MultiAttachEnabled": false,
+        "Size": 500,
+        "VolumeType": "st1"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/hhd/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Modules": "aws-cdk=1.75.0,@aws-cdk/assets=1.75.0,@aws-cdk/aws-cloudwatch=1.75.0,@aws-cdk/aws-ec2=1.75.0,@aws-cdk/aws-events=1.75.0,@aws-cdk/aws-iam=1.75.0,@aws-cdk/aws-kms=1.75.0,@aws-cdk/aws-logs=1.75.0,@aws-cdk/aws-s3=1.75.0,@aws-cdk/aws-s3-assets=1.75.0,@aws-cdk/aws-ssm=1.75.0,@aws-cdk/cloud-assembly-schema=1.75.0,@aws-cdk/core=1.75.0,@aws-cdk/cx-api=1.75.0,@aws-cdk/region-info=1.75.0,jsii-runtime=node.js/v14.15.1"
+      },
+      "Metadata": {
+        "aws:cdk:path": "ChiaStack/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Mappings": {
+    "LinuxMap": {
+      "us-west-2": {
+        "ami": "ami-0cf6f5c8a62fa5da6"
+      }
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Rules": {}
+}

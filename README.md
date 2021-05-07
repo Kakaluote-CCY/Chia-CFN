@@ -1,2 +1,2 @@
-# Chia
-Chia-Single-Click-Cloudformation-for-AWS
+# Chia AWS Quickstart Cloudformatioin
+Chia-Single-Server-Mining-Template

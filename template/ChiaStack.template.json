@@ -1,5 +1,5 @@
 {
-  "Description": "CCY",
+  "Description": "Chia B on AWS",
   "Metadata": {
     "AWS::CloudFormation::Interface": {
       "ParameterGroups": [

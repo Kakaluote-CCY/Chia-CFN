@@ -42,7 +42,7 @@ Please follow the steps to have a try:
 
     sudo mount /dev/xvdf /data1
 
-#change mode for your directory
+#change owner for your directory
 
     sudo chown -R ec2-user.ec2-user /tmp1
 

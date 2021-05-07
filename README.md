@@ -10,8 +10,10 @@ It will help you create:
 6. And all the things you do not want to care about
 
 It's just a quick start for AWS miners to quickly start one-server mining environment!
+
 Maybe you can do a POC on this environment.
-But not for production!!!
+
+**But not for production!!!**
 
 Prerequisite:
 1. AWS Global account

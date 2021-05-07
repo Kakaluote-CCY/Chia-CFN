@@ -30,15 +30,15 @@ Please follow the steps to have a try:
 
 #create file-system in that disk
 
-  sudo mkfs -t xfs /dev/xvdf
+    sudo mkfs -t xfs /dev/xvdf (disk name might change)
 
-  sudo mkfs -t xfs /dev/nvme0n1
+    sudo mkfs -t xfs /dev/nvme0n1
 
 #mount two disks to your instance
 
-  sudo mount /dev/nvme0n1 /tmp1
+    sudo mount /dev/nvme0n1 /tmp1
 
-  sudo mount /dev/xvdf /data1
+    sudo mount /dev/xvdf /data1
 
 #change mode for your directory
 

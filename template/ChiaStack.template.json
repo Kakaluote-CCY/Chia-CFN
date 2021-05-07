@@ -13,7 +13,7 @@
         },
         {
           "Label": {
-            "default": "Worker number Information"
+            "default": "Farmer number Information"
           },
           "Parameters": [
             "FarmerNumber"
@@ -208,7 +208,7 @@
     "RepoSecurityGroup77E693B5": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupDescription": "SG for Dealine Repository Server",
+        "GroupDescription": "SGr",
         "SecurityGroupEgress": [
           {
             "CidrIp": "0.0.0.0/0",

@@ -1,5 +1,5 @@
 {
-  "Description": "(SO8005) Chia B on AWS",
+  "Description": "",
   "Metadata": {
     "AWS::CloudFormation::Interface": {
       "ParameterGroups": [
